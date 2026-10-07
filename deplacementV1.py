@@ -11,7 +11,7 @@ fps = 60
 
 
 # joueur
-personnage1 = pygame.Rect(400, 300, 50, 50)
+personnage1 = pygame.Rect(0, 0, 50, 50)
 
 # bloque
 sol1 = pygame.Rect(0, 450, 300, 150)
@@ -26,7 +26,7 @@ vitesse_y = 0
 
 saut = -15
 
-gravite = 0.5
+gravite = 0.75
 
 
 
@@ -59,6 +59,8 @@ while ouvert :
     # creation des image a afficher 
     fenetre.fill(noir)
 
+    
+
 
     #calcule de la vitesse de chute 
     vitesse_y += gravite
@@ -66,8 +68,11 @@ while ouvert :
     personnage1.y += vitesse_y
 
     
+
          
-    
+    if personnage1.colliderect(sol1) or personnage1.colliderect(sol2) :
+            vitesse_y = 0
+            personnage1.bottom = sol1.top
     
     
 
