@@ -1,4 +1,5 @@
 import pygame 
+import fct_collisionsv1
 
 pygame.init()
 
@@ -16,6 +17,9 @@ personnage1 = pygame.Rect(0, 0, 50, 50)
 # bloque
 sol1 = pygame.Rect(0, 450, 300, 150)
 sol2 = pygame.Rect(400, 450, 400, 150)
+bloc1 = pygame.Rect(400, 150, 400, 150)
+
+liste_bloc = [sol1, sol2, bloc1]
 
 
 
@@ -68,16 +72,19 @@ while ouvert :
     #calcule de la vitesse de chute 
     vitesse_y += gravite
     personnage1.y += vitesse_y
-
     
 
     
-
-         
-    if personnage1.colliderect(sol1) or personnage1.colliderect(sol2) :
+    bloc = fct_collisionsv1.colision_dessus (liste_bloc, personnage1, vitesse_y)
+    if bloc != None:
             vitesse_y = 0
-            personnage1.bottom = sol1.top
+            personnage1.bottom = bloc.top
             nb_saut = nb_saut_perso
+
+    bloc = fct_collisionsv1.colision_dessous (liste_bloc, personnage1, vitesse_y)
+    if bloc != None:
+        vitesse_y = 0
+        personnage1.top = bloc.bottom
 
     
     
@@ -94,6 +101,7 @@ while ouvert :
     
     pygame.draw.rect(fenetre, marron,sol1)
     pygame.draw.rect(fenetre, marron,sol2)
+    pygame.draw.rect(fenetre, marron,bloc1)
     pygame.draw.rect(fenetre, vert,personnage1)
 
 
