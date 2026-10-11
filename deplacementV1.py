@@ -25,6 +25,8 @@ vitesse = 10
 vitesse_y = 0
 
 saut = -15
+nb_saut_perso = 2        # nombre de saut qu'as un personnage
+nb_saut = nb_saut_perso  # nombre de saut restant au personnage
 
 gravite = 0.75
 
@@ -50,9 +52,10 @@ while ouvert :
         if event.type == pygame.QUIT:
             ouvert = False
 
-        # on enclanche le saut 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        # on enclanche le saut si l'espace ou la fleche du haut est apuier et si il reste des saut
+        if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and nb_saut > 0) or (event.type == pygame.KEYDOWN and event.key == pygame.K_UP and nb_saut > 0) :
                 vitesse_y = saut
+                nb_saut -= 1
 
     touches = pygame.key.get_pressed()
     
@@ -64,8 +67,9 @@ while ouvert :
 
     #calcule de la vitesse de chute 
     vitesse_y += gravite
-
     personnage1.y += vitesse_y
+
+    
 
     
 
@@ -73,6 +77,8 @@ while ouvert :
     if personnage1.colliderect(sol1) or personnage1.colliderect(sol2) :
             vitesse_y = 0
             personnage1.bottom = sol1.top
+            nb_saut = nb_saut_perso
+
     
     
 
@@ -80,6 +86,7 @@ while ouvert :
 
     if touches[pygame.K_LEFT] or touches[pygame.K_q] :
         personnage1.x -= vitesse
+        
 
     if touches[pygame.K_RIGHT] or touches[pygame.K_d] :
             personnage1.x += vitesse
