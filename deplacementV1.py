@@ -8,7 +8,18 @@ fenetre = pygame.display.set_mode((800,600))
 horloge = pygame.time.Clock()
 fps = 60
 
+class personnage:
+    def __init__(self,nom):
+          self.nom = nom
+          self.vitesse = 10
+          self.saut = 2
+          self.saut_restant = self.saut
 
+    def dash(self):
+         pass
+
+    def changer_personnage():
+         pass
 
 
 # joueur
