@@ -1,12 +1,12 @@
 import pygame 
 import fct_collisionsv1
+import backgroundV1
 
 pygame.init()
 
 fenetre = pygame.display.set_mode((800,600))
 horloge = pygame.time.Clock()
 fps = 60
-
 
 
 
@@ -44,7 +44,7 @@ blanc = (255,255,255)
 marron = (100,100,100)  # n'as rien d'un marron
 
 
-
+background = backgroundV1.creation_fond('samples/Backgroundv1.png')
 
 
 ouvert = True 
@@ -64,7 +64,8 @@ while ouvert :
     touches = pygame.key.get_pressed()
     
     # creation des image a afficher 
-    fenetre.fill(noir)
+    #fenetre.fill(noir)
+    backgroundV1.insertion_fond(fenetre, background)
 
     
 
@@ -86,10 +87,6 @@ while ouvert :
         vitesse_y = 0
         personnage1.top = bloc.bottom
 
-    
-    
-
-
 
     if touches[pygame.K_LEFT] or touches[pygame.K_q] :
         personnage1.x -= vitesse
@@ -104,7 +101,15 @@ while ouvert :
     pygame.draw.rect(fenetre, marron,bloc1)
     pygame.draw.rect(fenetre, vert,personnage1)
 
+    #Activation du dash vers la droite
+    if touches[pygame.K_LSHIFT] and touches[pygame.K_RIGHT]:
+        personnage1.x += vitesse*2
 
+    #Activation du dash vers la gauche
+    if touches[pygame.K_LSHIFT] and touches[pygame.K_LEFT]:
+        personnage1.x -= vitesse*2
+
+    #Activation du rebond 
 
     # affichage du resultat
     pygame.display.flip()
