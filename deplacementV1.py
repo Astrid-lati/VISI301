@@ -4,7 +4,7 @@ import backgroundV1
 
 pygame.init()
 
-fenetre = pygame.display.set_mode((1800,1600))
+fenetre = pygame.display.set_mode((800,600))
 horloge = pygame.time.Clock()
 fps = 60
 
@@ -36,8 +36,9 @@ liste_bloc = [sol1, sol2, bloc1]
 
 
 #statistique
-vitesse = 10
 vitesse_y = 0
+vitesse_x = 0
+
 
 saut = -15
 nb_saut_perso = 2        # nombre de saut qu'as un personnage
@@ -48,7 +49,9 @@ nb_dash_perso = 1        # nombre de dash qu'as un personnage
 nb_dash = nb_dash_perso  # nombre de dash restant au personnage
 
 gravite = 0.75
-
+vitesse_max = 15
+velocite = 5             # accélération
+frottement = 2.5           # freinage quand on relâche
 
 
 #couleur 
@@ -65,6 +68,15 @@ background = backgroundV1.creation_fond('samples/Backgroundv1.png')
 ouvert = True 
 
 while ouvert : 
+
+    touches = pygame.key.get_pressed()
+     
+    # touche de deplacement 
+    gauche = touches[pygame.K_LEFT] or touches[pygame.K_q]
+    droite = touches[pygame.K_RIGHT] or touches[pygame.K_d]
+
+    
+
 
     # boucle pour la fermeture de la page 
     for event in pygame.event.get():
@@ -86,7 +98,7 @@ while ouvert :
             personnage1.x -= dash
             nb_dash -= 1
 
-    touches = pygame.key.get_pressed()
+    
     
     # creation des image a afficher 
     fenetre.fill(noir)
@@ -98,7 +110,23 @@ while ouvert :
     #calcule de la vitesse de chute 
     vitesse_y += gravite
     personnage1.y += vitesse_y
-    
+
+      
+    # calcul de la vitesse horizontale
+    if gauche and not droite:
+        vitesse_x = max(vitesse_x - velocite, -vitesse_max)
+    elif droite and not gauche:
+        vitesse_x = min(vitesse_x + velocite, vitesse_max)
+    else:
+        # aucune touche (ou les deux) : on ralentit vers 0
+        if vitesse_x > 0:
+            vitesse_x = max(vitesse_x - frottement, 0)
+        elif vitesse_x < 0:
+            vitesse_x = min(vitesse_x + frottement, 0)
+
+    # déplacement horizontal
+    personnage1.x += vitesse_x
+
 
     
     bloc = fct_collisionsv1.colision_dessus (liste_bloc, personnage1, vitesse_y)
@@ -107,6 +135,7 @@ while ouvert :
             personnage1.bottom = bloc.top
             nb_saut = nb_saut_perso
             nb_dash = nb_dash_perso
+            
 
 
     bloc = fct_collisionsv1.colision_dessous (liste_bloc, personnage1, vitesse_y)
@@ -115,12 +144,6 @@ while ouvert :
         personnage1.top = bloc.bottom
 
 
-    if touches[pygame.K_LEFT] or touches[pygame.K_q] :
-        personnage1.x -= vitesse
-        
-
-    if touches[pygame.K_RIGHT] or touches[pygame.K_d] :
-            personnage1.x += vitesse
 
     
     pygame.draw.rect(fenetre, marron,sol1)
