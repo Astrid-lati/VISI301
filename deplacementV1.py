@@ -27,8 +27,8 @@ personnage1 = pygame.Rect(0, 0, 50, 50)
 
 # bloque
 sol1 = pygame.Rect(0, 450, 300, 150)
-sol2 = pygame.Rect(400, 450, 400, 150)
-bloc1 = pygame.Rect(400, 150, 400, 150)
+sol2 = pygame.Rect(399, 450, 400, 150)
+bloc1 = pygame.Rect(400, 250, 400, 150)
 
 liste_bloc = [sol1, sol2, bloc1]
 
@@ -51,7 +51,7 @@ nb_dash = nb_dash_perso  # nombre de dash restant au personnage
 gravite = 0.75
 vitesse_max = 15
 velocite = 5             # accélération
-frottement = 2.5           # freinage quand on relâche
+frottement = 2           # freinage quand on relâche
 
 
 #couleur 
@@ -107,20 +107,24 @@ while ouvert :
     
 
 
-    #calcule de la vitesse de chute 
-    vitesse_y += gravite
-    personnage1.y += vitesse_y
+  
+
+
+
 
       
-    # calcul de la vitesse horizontale
+    # calcul de la vitesse horizontale si l'on presse une touche de deplacement 
     if gauche and not droite:
         vitesse_x = max(vitesse_x - velocite, -vitesse_max)
+
     elif droite and not gauche:
         vitesse_x = min(vitesse_x + velocite, vitesse_max)
+
     else:
-        # aucune touche (ou les deux) : on ralentit vers 0
+        # aucune touche ou les deux on ralentit vers 0
         if vitesse_x > 0:
             vitesse_x = max(vitesse_x - frottement, 0)
+
         elif vitesse_x < 0:
             vitesse_x = min(vitesse_x + frottement, 0)
 
@@ -128,20 +132,51 @@ while ouvert :
     personnage1.x += vitesse_x
 
 
+    # on aplique les colision en x
+    bloc = fct_collisionsv1.colision_droite (liste_bloc, personnage1, vitesse_x)
+    if bloc != None:
+        vitesse_x = 0
+        personnage1.left = bloc.right
     
+    
+    bloc = fct_collisionsv1.colision_gauche (liste_bloc, personnage1, vitesse_x)
+    if bloc != None:
+        vitesse_x = 0
+        personnage1.right = bloc.left
+    
+   
+
+    # calcule de la vitesse de chute 
+    vitesse_y += gravite
+    # déplacement vertical
+    personnage1.y += vitesse_y
+
+
+
+   # on aplique les colision en y
     bloc = fct_collisionsv1.colision_dessus (liste_bloc, personnage1, vitesse_y)
     if bloc != None:
-            vitesse_y = 0
-            personnage1.bottom = bloc.top
-            nb_saut = nb_saut_perso
-            nb_dash = nb_dash_perso
+        vitesse_y = 0
+        personnage1.bottom = bloc.top
+        nb_saut = nb_saut_perso
+        nb_dash = nb_dash_perso
             
-
 
     bloc = fct_collisionsv1.colision_dessous (liste_bloc, personnage1, vitesse_y)
     if bloc != None:
         vitesse_y = 0
         personnage1.top = bloc.bottom
+
+
+
+
+
+
+    # respone
+    if touches[pygame.K_j]:
+        personnage1.y = 0
+        personnage1.x = 100
+        vitesse_y = 100
 
 
 
