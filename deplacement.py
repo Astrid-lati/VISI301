@@ -23,14 +23,33 @@ class personnage:
 
 
 # joueur
-personnage1 = pygame.Rect(0, 0, 50, 50)
+personnage1 = pygame.Rect(0, 0, 30, 30)
 
 # bloque
-sol1 = pygame.Rect(0, 450, 300, 150)
-sol2 = pygame.Rect(399, 450, 400, 150)
-bloc1 = pygame.Rect(400, 250, 400, 150)
+#sol1 = pygame.Rect(0, 450, 300, 150)
+#sol2 = pygame.Rect(400, 450, 400, 150)
+#bloc1 = pygame.Rect(400, 150, 400, 150)
 
-liste_bloc = [sol1, sol2, bloc1]
+#liste_bloc = [sol1, sol2, bloc1]
+
+
+obs1 = background.load_image('samples/sol6.png', 224, 80)
+obs1_rect = background.obstacle_rect(obs1, 0, 520, 224, 80)
+
+obs2 = background.load_image('samples/sol6.png', 224, 80)
+obs2_rect = background.obstacle_rect(obs2, 400, 520, 224, 80)
+
+obs3 = background.load_image('samples/plateforme_1.png', 128, 48)
+obs3_rect = background.obstacle_rect(obs3, 450, 300, 128, 48)
+
+obs4 = background.load_image('samples/plateforme_2.png', 128, 48)
+obs4_rect = background.obstacle_rect(obs4, 0, 220, 128, 48)
+
+obs5 = background.load_image('samples/plateforme_3.png', 128, 48)
+obs5_rect = background.obstacle_rect(obs5, 400, 520, 128, 48)
+
+
+liste_bloc = [obs1_rect, obs2_rect, obs3_rect, obs4_rect, obs5_rect]
 
 
 
@@ -103,15 +122,11 @@ while ouvert :
     # creation des image a afficher 
     fenetre.fill(noir)
     background.insertion_fond(fenetre, background)
-
+    fenetre.blit(obs1,obs1_rect)
+    fenetre.blit(obs2,obs2_rect)
+    fenetre.blit(obs3,obs3_rect)
+    fenetre.blit(obs4,obs4_rect)
     
-
-
-  
-
-
-
-
       
     # calcul de la vitesse horizontale si l'on presse une touche de deplacement 
     if gauche and not droite:
@@ -181,9 +196,9 @@ while ouvert :
 
 
     
-    pygame.draw.rect(fenetre, marron,sol1)
-    pygame.draw.rect(fenetre, marron,sol2)
-    pygame.draw.rect(fenetre, marron,bloc1)
+    #pygame.draw.rect(fenetre, marron,sol1)
+    #pygame.draw.rect(fenetre, marron,sol2)
+    #pygame.draw.rect(fenetre, marron,bloc1)
     pygame.draw.rect(fenetre, vert,personnage1)
 
    
