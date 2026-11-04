@@ -81,7 +81,7 @@ blanc = (255,255,255)
 marron = (100,100,100)  # n'as rien d'un marron
 
 
-background = background.creation_fond('samples/Backgroundv1.png')
+fond = background.creation_fond('samples/Backgroundv1.png')
 
 
 ouvert = True 
@@ -121,7 +121,7 @@ while ouvert :
     
     # creation des image a afficher 
     fenetre.fill(noir)
-    background.insertion_fond(fenetre, background)
+    background.insertion_fond(fenetre, fond)
     fenetre.blit(obs1,obs1_rect)
     fenetre.blit(obs2,obs2_rect)
     fenetre.blit(obs3,obs3_rect)
