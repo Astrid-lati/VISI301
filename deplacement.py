@@ -1,6 +1,7 @@
 import pygame 
-import fct_collisionsv1
+import fct_collisions
 import background
+import fct_dash
 
 pygame.init()
 
@@ -59,17 +60,22 @@ vitesse_y = 0
 vitesse_x = 0
 
 
-saut = -15
+saut = -10
 nb_saut_perso = 2        # nombre de saut qu'as un personnage
 nb_saut = nb_saut_perso  # nombre de saut restant au personnage
 
-dash = 200               # distance du dash
-nb_dash_perso = 1        # nombre de dash qu'as un personnage
-nb_dash = nb_dash_perso  # nombre de dash restant au personnage
+
+vitesse_dash = 40        # pixels par image pendant le dash
+duree_dash = 5           # nombre d'images du dash 
+dash_restant = 0         # images de dash qu'il reste à faire
+direction_dash = 0       # 1 = droite, -1 = gauche, 0 = pas de dash 
+nb_dash_perso = 1
+nb_dash = nb_dash_perso
+
 
 gravite = 0.75
-vitesse_max = 15
-velocite = 5             # accélération
+vitesse_max = 10
+velocite = 2             # accélération
 frottement = 2           # freinage quand on relâche
 
 
@@ -108,14 +114,7 @@ while ouvert :
             nb_saut -= 1
 
          #Activation du dash vers la droite
-        if (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT and touches[pygame.K_RIGHT] and nb_dash > 0) or (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT and touches[pygame.K_d] and nb_dash > 0):
-            personnage1.x += dash
-            nb_dash -= 1
-        
-            #Activation du dash vers la gauche
-        if (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT and touches[pygame.K_LEFT] and nb_dash > 0) or (event.type == pygame.KEYDOWN and event.key == pygame.K_LSHIFT and touches[pygame.K_q] and nb_dash > 0):
-            personnage1.x -= dash
-            nb_dash -= 1
+        nb_dash, direction_dash, dash_restant = fct_dash.activation_dash(event, droite, gauche, nb_dash, direction_dash, dash_restant, duree_dash)
 
     
     
@@ -129,32 +128,35 @@ while ouvert :
     
       
     # calcul de la vitesse horizontale si l'on presse une touche de deplacement 
-    if gauche and not droite:
-        vitesse_x = max(vitesse_x - velocite, -vitesse_max)
+    if direction_dash != 0:
+        vitesse_x, vitesse_y, dash_restant, direction_dash = fct_dash.mise_a_jour_dash(direction_dash, dash_restant, vitesse_dash, vitesse_max)
+    else:    
+        if gauche and not droite:
+            vitesse_x = max(vitesse_x - velocite, -vitesse_max)
 
-    elif droite and not gauche:
-        vitesse_x = min(vitesse_x + velocite, vitesse_max)
+        elif droite and not gauche:
+            vitesse_x = min(vitesse_x + velocite, vitesse_max)
 
-    else:
-        # aucune touche ou les deux on ralentit vers 0
-        if vitesse_x > 0:
-            vitesse_x = max(vitesse_x - frottement, 0)
+        else:
+            # aucune touche ou les deux on ralentit vers 0
+            if vitesse_x > 0:
+                vitesse_x = max(vitesse_x - frottement, 0)
 
-        elif vitesse_x < 0:
-            vitesse_x = min(vitesse_x + frottement, 0)
+            elif vitesse_x < 0:
+                vitesse_x = min(vitesse_x + frottement, 0)
 
     # déplacement horizontal
     personnage1.x += vitesse_x
 
 
     # on aplique les colision en x
-    bloc = fct_collisionsv1.colision_droite (liste_bloc, personnage1, vitesse_x)
+    bloc = fct_collisions.colision_droite (liste_bloc, personnage1, vitesse_x)
     if bloc != None:
         vitesse_x = 0
         personnage1.left = bloc.right
     
     
-    bloc = fct_collisionsv1.colision_gauche (liste_bloc, personnage1, vitesse_x)
+    bloc = fct_collisions.colision_gauche (liste_bloc, personnage1, vitesse_x)
     if bloc != None:
         vitesse_x = 0
         personnage1.right = bloc.left
@@ -169,7 +171,7 @@ while ouvert :
 
 
    # on aplique les colision en y
-    bloc = fct_collisionsv1.colision_dessus (liste_bloc, personnage1, vitesse_y)
+    bloc = fct_collisions.colision_dessus (liste_bloc, personnage1, vitesse_y)
     if bloc != None:
         vitesse_y = 0
         personnage1.bottom = bloc.top
@@ -177,7 +179,7 @@ while ouvert :
         nb_dash = nb_dash_perso
             
 
-    bloc = fct_collisionsv1.colision_dessous (liste_bloc, personnage1, vitesse_y)
+    bloc = fct_collisions.colision_dessous (liste_bloc, personnage1, vitesse_y)
     if bloc != None:
         vitesse_y = 0
         personnage1.top = bloc.bottom
