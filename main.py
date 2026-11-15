@@ -160,9 +160,9 @@ while ouvert :
         personnage1.right = bloc.left
     
    
-
-    # calcule de la vitesse de chute 
-    vitesse_y += gravite
+    if direction_dash == 0: 
+        # calcule de la vitesse de chute 
+        vitesse_y += gravite
     # déplacement vertical
     personnage1.y += vitesse_y
 
