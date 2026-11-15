@@ -2,6 +2,7 @@ import pygame
 import fct_collisions
 import background
 import fct_dash
+import niveau
 
 pygame.init()
 
@@ -10,9 +11,7 @@ horloge = pygame.time.Clock()
 fps = 60
 
 
-largeur_fenetre = 800
-largeur_niveau = 2400     
-camera_x = 0
+
 
 class personnage:
     def __init__(self,nom):
@@ -37,36 +36,6 @@ personnage1 = pygame.Rect(0, 0, 30, 30)
 #bloc1 = pygame.Rect(400, 150, 400, 150)
 
 #liste_bloc = [sol1, sol2, bloc1]
-
-
-obs1 = background.load_image('samples/sol6.png', 224, 80)
-obs1_rect = background.obstacle_rect(obs1, 0, 520, 224, 80)
-
-obs2 = background.load_image('samples/sol6.png', 224, 80)
-obs2_rect = background.obstacle_rect(obs2, 400, 520, 224, 80)
-
-obs3 = background.load_image('samples/plateforme_1.png', 128, 48)
-obs3_rect = background.obstacle_rect(obs3, 450, 300, 128, 48)
-
-obs4 = background.load_image('samples/plateforme_2.png', 128, 48)
-obs4_rect = background.obstacle_rect(obs4, 0, 220, 128, 48)
-
-obs5 = background.load_image('samples/plateforme_3.png', 128, 48)
-obs5_rect = background.obstacle_rect(obs5, 400, 520, 128, 48)
-
-obs6 = background.load_image('samples/sol6.png', 224, 80)
-obs6_rect = background.obstacle_rect(obs6, 800, 520, 224, 80)
-
-obs7 = background.load_image('samples/plateforme_1.png', 128, 48)
-obs7_rect = background.obstacle_rect(obs7, 1100, 400, 128, 48)
-
-obs8 = background.load_image('samples/sol6.png', 224, 80)
-obs8_rect = background.obstacle_rect(obs8, 1400, 520, 224, 80)
-
-
-liste_bloc = [obs1_rect, obs2_rect, obs3_rect, obs4_rect, obs5_rect, obs6_rect, obs7_rect, obs8_rect]
-liste_images = [obs1, obs2, obs3, obs4, obs5, obs6, obs7, obs8]
-
 
 
 
@@ -104,6 +73,27 @@ marron = (100,100,100)  # n'as rien d'un marron
 
 fond = background.creation_fond('samples/Backgroundv1.png')
 
+map1 = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,3,3,3,0,0,0,0,0,0,0,0,0,3,3,3,0,0,0,0,0,0,0],
+    [2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,3,3,3,0,0,0,0,0,0,0,0,0,3,3,3,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0],
+    [1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0]
+]
+
+world = niveau.Niveau(map1)
+
+liste_bloc = world.list_rect()
+largeur_niveau = world.largeur()
+largeur_fenetre = 800
+
 
 ouvert = True 
 
@@ -133,8 +123,6 @@ while ouvert :
 
     
     
-  
-
 
       
     # calcul de la vitesse horizontale si l'on presse une touche de deplacement 
@@ -210,12 +198,10 @@ while ouvert :
     camera_x = max(0, min(camera_x, largeur_niveau - largeur_fenetre))
 
 
+
     fenetre.fill(noir)
-    background.insertion_fond(fenetre, fond)   # on met le fond
-
-    for image, rect in zip(liste_images, liste_bloc):
-        fenetre.blit(image, rect.move(-camera_x, 0))
-
+    background.insertion_fond(fenetre, fond)     # on met le fond
+    world.draw(fenetre, camera_x)
     pygame.draw.rect(fenetre, vert, personnage1.move(-camera_x, 0))
 
     
