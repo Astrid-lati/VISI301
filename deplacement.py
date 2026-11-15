@@ -2,6 +2,7 @@ import pygame
 import fct_collisions
 import background
 import fct_dash
+import niveau
 
 pygame.init()
 
@@ -32,27 +33,6 @@ personnage1 = pygame.Rect(0, 0, 30, 30)
 #bloc1 = pygame.Rect(400, 150, 400, 150)
 
 #liste_bloc = [sol1, sol2, bloc1]
-
-
-obs1 = background.load_image('samples/sol6.png', 224, 80)
-obs1_rect = background.obstacle_rect(obs1, 0, 520, 224, 80)
-
-obs2 = background.load_image('samples/sol6.png', 224, 80)
-obs2_rect = background.obstacle_rect(obs2, 400, 520, 224, 80)
-
-obs3 = background.load_image('samples/plateforme_1.png', 128, 48)
-obs3_rect = background.obstacle_rect(obs3, 450, 300, 128, 48)
-
-obs4 = background.load_image('samples/plateforme_2.png', 128, 48)
-obs4_rect = background.obstacle_rect(obs4, 0, 220, 128, 48)
-
-obs5 = background.load_image('samples/plateforme_3.png', 128, 48)
-obs5_rect = background.obstacle_rect(obs5, 400, 520, 128, 48)
-
-
-liste_bloc = [obs1_rect, obs2_rect, obs3_rect, obs4_rect, obs5_rect]
-
-
 
 
 #statistique
@@ -89,6 +69,24 @@ marron = (100,100,100)  # n'as rien d'un marron
 
 fond = background.creation_fond('samples/Backgroundv1.png')
 
+map1 = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,3,3,3,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+       [1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0],
+       [1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,0],
+]
+
+world = niveau.Niveau(map1)
+
+liste_bloc = world.list_rect()
+
 
 ouvert = True 
 
@@ -121,10 +119,8 @@ while ouvert :
     # creation des image a afficher 
     fenetre.fill(noir)
     background.insertion_fond(fenetre, fond)
-    fenetre.blit(obs1,obs1_rect)
-    fenetre.blit(obs2,obs2_rect)
-    fenetre.blit(obs3,obs3_rect)
-    fenetre.blit(obs4,obs4_rect)
+
+    world.draw(fenetre)
     
       
     # calcul de la vitesse horizontale si l'on presse une touche de deplacement 
