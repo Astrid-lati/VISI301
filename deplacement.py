@@ -9,6 +9,11 @@ fenetre = pygame.display.set_mode((800,600))
 horloge = pygame.time.Clock()
 fps = 60
 
+
+largeur_fenetre = 800
+largeur_niveau = 2400     
+camera_x = 0
+
 class personnage:
     def __init__(self,nom):
           self.nom = nom
@@ -49,8 +54,18 @@ obs4_rect = background.obstacle_rect(obs4, 0, 220, 128, 48)
 obs5 = background.load_image('samples/plateforme_3.png', 128, 48)
 obs5_rect = background.obstacle_rect(obs5, 400, 520, 128, 48)
 
+obs6 = background.load_image('samples/sol6.png', 224, 80)
+obs6_rect = background.obstacle_rect(obs6, 800, 520, 224, 80)
 
-liste_bloc = [obs1_rect, obs2_rect, obs3_rect, obs4_rect, obs5_rect]
+obs7 = background.load_image('samples/plateforme_1.png', 128, 48)
+obs7_rect = background.obstacle_rect(obs7, 1100, 400, 128, 48)
+
+obs8 = background.load_image('samples/sol6.png', 224, 80)
+obs8_rect = background.obstacle_rect(obs8, 1400, 520, 224, 80)
+
+
+liste_bloc = [obs1_rect, obs2_rect, obs3_rect, obs4_rect, obs5_rect, obs6_rect, obs7_rect, obs8_rect]
+liste_images = [obs1, obs2, obs3, obs4, obs5, obs6, obs7, obs8]
 
 
 
@@ -61,7 +76,7 @@ vitesse_x = 0
 
 
 saut = -10
-nb_saut_perso = 2        # nombre de saut qu'as un personnage
+nb_saut_perso = 5        # nombre de saut qu'as un personnage
 nb_saut = nb_saut_perso  # nombre de saut restant au personnage
 
 
@@ -118,14 +133,9 @@ while ouvert :
 
     
     
-    # creation des image a afficher 
-    fenetre.fill(noir)
-    background.insertion_fond(fenetre, fond)
-    fenetre.blit(obs1,obs1_rect)
-    fenetre.blit(obs2,obs2_rect)
-    fenetre.blit(obs3,obs3_rect)
-    fenetre.blit(obs4,obs4_rect)
-    
+  
+
+
       
     # calcul de la vitesse horizontale si l'on presse une touche de deplacement 
     if direction_dash != 0:
@@ -189,19 +199,30 @@ while ouvert :
 
 
 
-    # respone
+    # respawn
     if touches[pygame.K_j]:
         personnage1.y = 0
         personnage1.x = 100
         vitesse_y = 100
 
+    # position de la camera
+    camera_x = personnage1.centerx - largeur_fenetre // 2
+    camera_x = max(0, min(camera_x, largeur_niveau - largeur_fenetre))
 
+
+    fenetre.fill(noir)
+    background.insertion_fond(fenetre, fond)   # on met le fond
+
+    for image, rect in zip(liste_images, liste_bloc):
+        fenetre.blit(image, rect.move(-camera_x, 0))
+
+    pygame.draw.rect(fenetre, vert, personnage1.move(-camera_x, 0))
 
     
     #pygame.draw.rect(fenetre, marron,sol1)
     #pygame.draw.rect(fenetre, marron,sol2)
     #pygame.draw.rect(fenetre, marron,bloc1)
-    pygame.draw.rect(fenetre, vert,personnage1)
+   
 
    
 
