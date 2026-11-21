@@ -13,22 +13,11 @@ fps = 60
 
 
 
-class personnage:
-    def __init__(self,nom):
-          self.nom = nom
-          self.vitesse = 10
-          self.saut = 2
-          self.saut_restant = self.saut
-
-    def dash(self):
-         pass
-
-    def changer_personnage():
-         pass
 
 
 # joueur
 personnage1 = pygame.Rect(0, 0, 30, 30)
+type_perso = 1
 
 # bloque
 #sol1 = pygame.Rect(0, 450, 300, 150)
@@ -45,7 +34,7 @@ vitesse_x = 0
 
 
 saut = -10
-nb_saut_perso = 5        # nombre de saut qu'as un personnage
+nb_saut_perso = 2        # nombre de saut qu'as un personnage
 nb_saut = nb_saut_perso  # nombre de saut restant au personnage
 
 
@@ -53,7 +42,7 @@ vitesse_dash = 40        # pixels par image pendant le dash
 duree_dash = 5           # nombre d'images du dash 
 dash_restant = 0         # images de dash qu'il reste à faire
 direction_dash = 0       # 1 = droite, -1 = gauche, 0 = pas de dash 
-nb_dash_perso = 1
+nb_dash_perso = 0
 nb_dash = nb_dash_perso
 
 
@@ -67,6 +56,7 @@ frottement = 2           # freinage quand on relâche
 vert = (0,255,0)
 noir = (0,0,0)
 rouge = (255,0,0)
+bleu = (0,0,255)
 blanc = (255,255,255)
 marron = (100,100,100)  # n'as rien d'un marron
 
@@ -104,6 +94,7 @@ while ouvert :
     # touche de deplacement 
     gauche = touches[pygame.K_LEFT] or touches[pygame.K_q]
     droite = touches[pygame.K_RIGHT] or touches[pygame.K_d]
+    # touches[pygame.K_j]
 
     
 
@@ -121,6 +112,23 @@ while ouvert :
          #Activation du dash vers la droite
         nb_dash, direction_dash, dash_restant = fct_dash.activation_dash(event, droite, gauche, nb_dash, direction_dash, dash_restant, duree_dash)
 
+        if (event.type == pygame.KEYDOWN and event.key == pygame.K_f) :
+                    type_perso = 1
+                    nb_saut_perso = 2  
+                    nb_dash_perso = 0 
+                    saut = -10
+
+        elif (event.type == pygame.KEYDOWN and event.key == pygame.K_g) :
+                    type_perso = 2
+                    nb_saut_perso = 1
+                    nb_dash_perso = 1
+                    saut = -10
+                    
+        elif (event.type == pygame.KEYDOWN and event.key == pygame.K_h) :
+                    type_perso = 3
+                    nb_saut_perso = 1
+                    nb_dash_perso = 0
+                    saut = -20
     
     
 
@@ -202,7 +210,14 @@ while ouvert :
     fenetre.fill(noir)
     background.insertion_fond(fenetre, fond)     # on met le fond
     world.draw(fenetre, camera_x)
-    pygame.draw.rect(fenetre, vert, personnage1.move(-camera_x, 0))
+
+    if type_perso == 1:
+        pygame.draw.rect(fenetre, vert, personnage1.move(-camera_x, 0))
+    elif type_perso == 2:
+        pygame.draw.rect(fenetre, rouge, personnage1.move(-camera_x, 0))
+    else:
+        pygame.draw.rect(fenetre, bleu, personnage1.move(-camera_x, 0))
+
 
     
     #pygame.draw.rect(fenetre, marron,sol1)
