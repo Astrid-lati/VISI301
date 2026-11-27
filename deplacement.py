@@ -7,6 +7,10 @@ import niveau
 pygame.init()
 
 fenetre = pygame.display.set_mode((800,600))
+
+police = pygame.font.SysFont(None, 36)
+temps_depart = pygame.time.get_ticks()
+
 horloge = pygame.time.Clock()
 fps = 60
 
@@ -39,7 +43,7 @@ nb_saut = nb_saut_perso  # nombre de saut restant au personnage
 
 
 vitesse_dash = 40        # pixels par image pendant le dash
-duree_dash = 5           # nombre d'images du dash 
+duree_dash = 6           # nombre d'images du dash 
 dash_restant = 0         # images de dash qu'il reste à faire
 direction_dash = 0       # 1 = droite, -1 = gauche, 0 = pas de dash 
 nb_dash_perso = 0
@@ -195,15 +199,28 @@ while ouvert :
 
 
 
-    # respawn
+    # respawn et reset le timer
     if touches[pygame.K_j]:
         personnage1.y = 0
         personnage1.x = 100
         vitesse_y = 100
+        temps_depart = pygame.time.get_ticks()
+
+
 
     # position de la camera
     camera_x = personnage1.centerx - largeur_fenetre // 2
     camera_x = max(0, min(camera_x, largeur_niveau - largeur_fenetre))
+
+
+
+    # calcul timer
+    miliseconde = pygame.time.get_ticks() - temps_depart
+    minutes = miliseconde // 60000
+    secondes = (miliseconde // 1000) % 60
+    centieme_de_seconde = (miliseconde // 10) % 100
+    texte = police.render("Temps : " + str(minutes) + ":" + str(secondes) + ":" + str(centieme_de_seconde), True, blanc)
+    fenetre.blit(texte, (10, 10))
 
 
 
@@ -224,7 +241,7 @@ while ouvert :
     #pygame.draw.rect(fenetre, marron,sol2)
     #pygame.draw.rect(fenetre, marron,bloc1)
    
-
+    fenetre.blit(texte, (largeur_fenetre // 2 -90, 20))   # timer
    
 
     #Activation du rebond 
